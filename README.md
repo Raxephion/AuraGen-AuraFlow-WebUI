@@ -47,7 +47,7 @@ This app runs locally, plays nice with ~6GB of VRAM, and doesn’t ask you to si
 
 ## ⚙️ Installation & Setup (The Lazy-Friendly Way™)
 
-Skip the manual venv setup — we've scripted the whole ordeal:
+Skip the manual venv setup — I've scripted the whole ordeal:
 
 1. **Clone or download the repo**:
    ```bash
@@ -105,10 +105,10 @@ Huge respect to @cloneofsimo, @isidentical, and the folks behind the scenes.
   - Close Chrome tabs full of cat videos
 
 - **Stuck downloading?**
-  - Check your internet connection. Maybe even say something nice to it.
+  - Check your internet connection. Maybe even say something nice to it. Sacrifice a goat? Nah, just kidding, but check that connection
 
 - **Gradio crashing or tooltip errors?**
-  - You’re probably on an older/newer version. We stripped tooltips for max compatibility.
+  - You’re probably on an older/newer version. I stripped tooltips for max compatibility. I may bring them back once I've recovered from this
 
 - **Protobuf errors?**
   - Make sure you ran `install.bat` in a clean environment. Reinstall dependencies if needed.
@@ -142,4 +142,4 @@ It uses the [AuraFlow model](https://huggingface.co/fal/AuraFlow-v0.3), which is
 ---
 
 Happy generating, and may your VRAM survive the journey.  
-— *The Flowgen-webUI Dev Team (i.e., probably just you)*
+— *The Flowgen-webUI Dev Team (There is an I in team after all! - Raxephion)*
