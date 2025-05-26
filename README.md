@@ -11,155 +11,99 @@ This isn't a feature dump of ComfyUI, and it doesn’t want to be. Think of it a
 
 ## 🧐 What *Is* This?
 
-AuraFLooow is a lightweight web app using Gradio that wraps around the excellent [`fal/AuraFlow-v0.3`](https://huggingface.co/fal/AuraFlow-v0.3) text-to-image model. It’s for those who:
+AuraFLooow is a lightweight Gradio web app wrapping the [`fal/AuraFlow-v0.3`](https://huggingface.co/fal/AuraFlow-v0.3) image generation model. It’s for people who:
 
 - Own a GPU that didn’t cost more than their car.
 - Prefer sliders over shell scripts.
-- Want to run locally (yes, even offline — no "cloud credits" required).
-- Think AI art should be simple enough that your mum could use it. And possibly does.
+- Want to run locally (yes, even offline — no cloud nonsense).
+- Think AI art should be simple enough your mum could use it. And maybe does.
 
 ---
 
-## 🎯 Core Features (aka “What It Actually Does”)
+## 🎯 Features
 
 - Generates images from text prompts with AuraFlow.
-- Resize image output — up to AuraFlow’s very generous limits.
-- Tweak steps, CFG scale, and seed (or roll the dice).
-- Saves your creations to an `output/` folder automatically.
-- Dark-mode-ish modern UI with buttons, not bash.
-- Tries very hard not to gobble up all your VRAM, with CPU offloading via `diffusers`.
+- Output resolution control (up to AuraFlow’s 1536px ceiling).
+- Steps, CFG scale, seed — tweak away.
+- Auto-saves outputs to an `output/` folder.
+- Simple, modern UI with no required brain damage.
+- VRAM-friendly thanks to CPU offloading via `diffusers`.
 
 ---
 
 ## 🧠 System Requirements
 
 ### 🧱 Hardware
-- A **dedicated NVIDIA GPU** with **at least 6GB of VRAM**.
-  - *Can it run on CPU?* Yes. Should it? Not unless you enjoy existential waiting.
-  - *AMD GPUs?* Technically possible. But we don’t officially support those shenanigans — `diffusers` + ROCm is a whole separate odyssey.
+- **NVIDIA GPU** with **6GB+ VRAM**
+- **AMD/Intel?** Possible, but not officially supported. You're on your own, brave soul.
 
 ### 💿 Software
-- **Python 3.9+**  
-- **Pip** (comes with Python, usually)
-- **Git** (optional, unless you enjoy downloading ZIPs manually)
-
-### 🧙 Required Python Packages
-
-Everything you need is in `requirements.txt`, including:
-- `diffusers`, `torch`, `transformers`, `gradio`, `accelerate`
-- Plus a few supporting roles: `Pillow`, `protobuf`, `safetensors`, etc.
+- **Windows**
+- **Python 3.9+**
+- No other installations needed — we’ve got `.bat` scripts to automate the mess.
 
 ---
 
-## 🛠️ Installation – Or “How Not to Break It”
+## ⚡ Quickstart (for Lazy but Genius People)
 
-### 1. Clone (or Download) the Repository
-**Option A – Git enjoyers:**
-```bash
-git clone https://github.com/Raxephion/AuraFlooow.git AuraFLooow
-cd AuraFLooow
-```
+1. **Download the repo** (ZIP or Git).
+2. **Double-click `install.bat`**  
+   This will:
+   - Create a virtual environment
+   - Install all dependencies
+3. **Double-click `launch.bat`**  
+   This:
+   - Activates the venv
+   - Launches the web UI in your browser
 
-**Option B – ZIP warriors:**
-Download the ZIP from GitHub, extract it, and `cd` into the folder.
-
-### 2. Create a Virtual Environment
-Because isolation is healthy (for Python projects, anyway):
-```bash
-python -m venv venv
-```
-
-### 3. Activate It
-**Windows:**
-```bash
-venv\Scripts\activate
-```
-**macOS/Linux:**
-```bash
-source venv/bin/activate
-```
-
-### 4. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-Yes, PyTorch is big. Go make coffee.
-
----
-
-## 🚀 Running the App
-
-After installing, fire it up:
-
-```bash
-python app.py
-```
-
-(Windows users can just double-click `run.bat` if the command line makes them itchy.)
-
-The **first run** will download the model (10–15GB, depending on version). Don’t panic — it’s only slow once. After that, it’s cached.
-
-Once you see something like:
-```
-Running on local URL: http://127.0.0.1:7860
-```
-pop that into your browser and enjoy the ride.
+Done. You’re generating. You're welcome.
 
 ---
 
 ## 🧩 About the Model – AuraFlow v0.3
 
-AuraFlow v0.3 is a clever little beast — flow-based, open-source, and fine-tuned for aesthetics. Think of it as the model equivalent of a gallery curator with a GPU.
+AuraFlow v0.3 is a stylish little diffusion model that:
+- Supports large images (up to 1536x1536)
+- Uses flow-matching to keep things snappy
+- Scores great on GenEval benchmarks
 
-> _“Supports multiple aspect ratios, 1536px limits, and state-of-the-art scores on GenEval.”_  
-> – paraphrased from [fal.ai](https://fal.ai/blog/auraflow)
-
-Massive kudos to the team: `@cloneofsimo`, `@isidentical`, and others who actually understand diffusion math.
-
----
-
-## 🧯 Common Problems (and Solutions That Don’t Involve Screaming)
-
-### 🔥 CUDA Out of Memory?
-- Lower your image resolution.
-- Close other GPU-intensive apps (yes, even Chrome).
-- 6GB VRAM is the sweet spot — below that, expect hiccups.
-- CPU offload helps, but it's not witchcraft.
-
-### 🐢 First Run is Slow?
-That’s the model downloading. It’s not stuck. Just slow. Blame your ISP.
-
-### ❌ Protobuf Errors or Missing Models?
-Double-check that you’re installing packages *inside* the virtual environment.
-
-### 🧪 Gradio `tooltip` errors?
-We removed `tooltip` for broader compatibility. If you’re using a newer Gradio version and really want it back — go ahead and hack it in.
+Built by the clever humans at [fal.ai](https://fal.ai/blog/auraflow). Props to `@cloneofsimo`, `@isidentical`, and their crew.
 
 ---
 
-## 🔁 Changing the Model
+## 🧯 Troubleshooting
 
-Default model is `fal/AuraFlow-v0.3`. To swap it:
+### CUDA Out of Memory?
+- Lower the resolution.
+- Close apps hogging the GPU (yes, even Chrome).
+- CPU offload helps, but magic it ain't.
+
+### First Launch is Slow?
+That’s the model downloading. Give it time. It’s ~10–15GB. Coffee break.
+
+### Python Errors?
+Try running `install.bat` again to reset the venv and dependencies.
+
+---
+
+## 🔁 Want to Use a Different Model?
 
 1. Open `app.py`
-2. Look for `MODEL_NAME = "fal/AuraFlow-v0.3"`
-3. Change it to your preferred model (as long as it’s AuraFlow-compatible)
-
-You can also load models locally if they’re in your Hugging Face cache.
+2. Change this line:
+```python
+MODEL_NAME = "fal/AuraFlow-v0.3"
+```
+…to whatever Hugging Face model you want (as long as it's compatible with `diffusers`).
 
 ---
 
-## 🙃 Final Words (and a Gentle Disclaimer)
+## 🙃 Final Words
 
-This is a side project. It’s not bulletproof. It’s not enterprise-ready. But it works, and it's meant to get you creating without the overhead of ComfyUI or the GPU of a data center.
+AuraFLooow is for creators, tinkerers, and burnt-out ComfyUI users who just want to make some dang art. It's not built for production. It’s not trying to be everything. It’s just meant to work — simply, and well.
 
-Please:
-- Use ethically.
-- Don’t prompt weird illegal stuff.
-- Credit the original model creators.
-- Don’t send support requests to NVIDIA when this breaks.
+Use responsibly. Prompt ethically. And don’t call us if your VRAM explodes.
 
 ---
 
 Happy prompting! 🎨  
-— *Team Probably Didn’t Sleep Enough*
+— *Team Definitely Slept at Some Point*
