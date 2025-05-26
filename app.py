@@ -73,10 +73,6 @@ def generate_image(prompt: str, width: int, height: int, num_inference_steps: in
 
     if pipeline is None:
         # This could happen if the initial load failed.
-        # Attempt to load it again, or handle error gracefully.
-        # For now, raise an error that Gradio will display.
-        # load_auraflow_pipeline() # Try to load again
-        # if pipeline is None: # If still None after trying
         gr.Error("Model is not loaded. Please check console logs and restart the app.")
         return None, "Error: Model not loaded.", -1, "Error"
 
@@ -209,8 +205,10 @@ with gr.Blocks(theme=theme, css="""
 
                 with gr.Row(elem_id="seed_row"): # For CSS targeting
                     seed_input = gr.Number(label="Seed (-1 for random)", value=-1, precision=0, interactive=True)
-                    random_seed_button = gr.Button("🎲", elem_classes="small-button", tooltip="Random Seed")
-                    reuse_seed_button = gr.Button("♻️", elem_classes="small-button", tooltip="Reuse Last Seed")
+                    # MODIFIED: Removed tooltip argument
+                    random_seed_button = gr.Button("🎲", elem_classes="small-button")
+                    # MODIFIED: Removed tooltip argument
+                    reuse_seed_button = gr.Button("♻️", elem_classes="small-button")
 
                 generate_button = gr.Button("Generate Image", variant="primary", scale=2)
 
