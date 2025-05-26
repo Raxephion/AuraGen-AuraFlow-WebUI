@@ -50,12 +50,22 @@ This app runs locally, plays nice with ~6GB of VRAM, and doesn’t ask you to si
 Skip the manual venv setup — I've scripted the whole ordeal:
 
 1. **Clone or download the repo**:
+   
+   -Extract to a desired location
+   
+   or
+   
    ```bash
    git clone https://github.com/Raxephion/FlowGen-webUI.git
    cd FlowGen-webUI
    ```
 
-2. **Run the installer script** (Windows):
+3. **Run the installer script** (Windows):
+   
+    - Double-click the install.bat file inside the extracted folder
+  
+      or
+      
    ```bash
    install.bat
    ```
@@ -65,12 +75,17 @@ Skip the manual venv setup — I've scripted the whole ordeal:
    - Installs all dependencies
    - Preps the app for launch
 
-3. **Launch the app**:
+5. **Launch the app**:
+
+   - Double-click on launch.bat
+  
+     or
+     
    ```bash
    launch.bat
    ```
 
-4. First-time run? Grab a drink — the model (10–15GB) will download via `diffusers`. After that, it's cached.
+7. First-time run? Grab a drink — the model (10–15GB) will download via `diffusers`. After that, it's cached.
 
 ---
 
