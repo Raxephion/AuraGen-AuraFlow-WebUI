@@ -1,3 +1,5 @@
+# NB: Project still being tested and files modified. 
+
 # AuraFLooow ✨  
 _Image Generation Without the VRAM Meltdown_
 
