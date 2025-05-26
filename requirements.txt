@@ -1,11 +1,11 @@
-gradio
-torch --index-url https://download.pytorch.org/whl/cu118 # Or cu121, or remove for CPU-only
+diffusers
+torch
 torchvision
 torchaudio
-diffusers>=0.27.0 # Ensure a recent version for AuraFlow and features
 transformers
-accelerate # Crucial for CPU offloading
-invisible-watermark>=0.2.0
-safetensors
-pathvalidate
+accelerate
+gradio
 Pillow
+pathvalidate
+protobuf
+safetensors
