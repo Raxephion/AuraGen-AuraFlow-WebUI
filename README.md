@@ -1,111 +1,137 @@
-# NB: Project still being tested and files modified. 
-
-# AuraFLooow ✨  
-_Image Generation Without the VRAM Meltdown_
+# Flowgen-webUI ⚡  
+*A 6GB VRAM-optimized, local AuraFlow Gradio web app — for the rest of us.*
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-So you've got a mid-range GPU, an artistic itch, and a mild aversion to ComfyUI’s 400-node spaghetti graphs? Welcome. You’re in the right place — **AuraFLooow** is your one-click, low-fuss web UI for running the AuraFlow image model without setting your rig on fire.
+Welcome to **Flowgen-webUI**, the low-VRAM, no-nonsense interface for generating images with [AuraFlow](https://huggingface.co/fal/AuraFlow-v0.3). It's for people who think *ComfyUI* is great but also mildly terrifying, and who’d rather click buttons than build node graphs in their free time.
 
-This isn't a feature dump of ComfyUI, and it doesn’t want to be. Think of it as “image generation on a diet” — built for people who just want to type stuff like _“cyberpunk goose in a trench coat”_ and see it rendered, without reading a TensorRT whitepaper first.
-
----
-
-## 🧐 What *Is* This?
-
-AuraFLooow is a lightweight Gradio web app wrapping the [`fal/AuraFlow-v0.3`](https://huggingface.co/fal/AuraFlow-v0.3) image generation model. It’s for people who:
-
-- Own a GPU that didn’t cost more than their car.
-- Prefer sliders over shell scripts.
-- Want to run locally (yes, even offline — no cloud nonsense).
-- Think AI art should be simple enough your mum could use it. And maybe does.
+This app runs locally, plays nice with ~6GB of VRAM, and doesn’t ask you to sign away your data to the cloud gods. You're welcome.
 
 ---
 
-## 🎯 Features
+## 🌀 What Is This?
 
-- Generates images from text prompts with AuraFlow.
-- Output resolution control (up to AuraFlow’s 1536px ceiling).
-- Steps, CFG scale, seed — tweak away.
-- Auto-saves outputs to an `output/` folder.
-- Simple, modern UI with no required brain damage.
-- VRAM-friendly thanks to CPU offloading via `diffusers`.
+**Flowgen-webUI** is a lightweight Gradio app for running `fal/AuraFlow-v0.3` locally. It's designed for:
+
+- **Modest hardware** (think: 6GB VRAM cards that aren't dreaming of becoming A100s).
+- **Non-technical users** (no Python kung-fu or YAML deciphering required).
+- **Quick setup** (with `install.bat` and `launch.bat`, no ritual sacrifices needed).
+- **Offline privacy** (your cursed prompts stay on your machine).
 
 ---
 
-## 🧠 System Requirements
+## ✅ Features
 
-### 🧱 Hardware
-- **NVIDIA GPU** with **6GB+ VRAM**
-- **AMD/Intel?** Possible, but not officially supported. You're on your own, brave soul.
+- ✨ Generate images from text prompts using AuraFlow v0.3.
+- 📏 Adjustable image dimensions (up to 1536x1536, if your VRAM permits).
+- 🎛️ Control inference steps, guidance scale (CFG), and set seeds.
+- 💾 Saves outputs to an `output` folder.
+- 🎨 Clean, modern UI with sliders and buttons.
+- 🧠 CPU offloading enabled via `diffusers` to make sure your GPU doesn't spontaneously combust.
 
-### 💿 Software
-- **Windows**
+---
+
+## 🧰 Requirements
+
+### Hardware:
+- **NVIDIA GPU** with **~6GB VRAM** or more recommended.
+  - Will fall back to CPU mode if CUDA is unavailable (but expect glacial speeds).
+  - AMD GPUs are not officially supported (yet), but ROCm support is evolving.
+
+### Software:
+- **Windows** (currently tested), though Linux/Mac users can adapt the scripts.
 - **Python 3.9+**
-- No other installations needed — we’ve got `.bat` scripts to automate the mess.
+- **Git** (optional, but convenient)
 
 ---
 
-## ⚡ Quickstart (for Lazy but Genius People)
+## ⚙️ Installation & Setup (The Lazy-Friendly Way™)
 
-1. **Download the repo** (ZIP or Git).
-2. **Double-click `install.bat`**  
-   This will:
-   - Create a virtual environment
-   - Install all dependencies
-3. **Double-click `launch.bat`**  
+Skip the manual venv setup — we've scripted the whole ordeal:
+
+1. **Clone or download the repo**:
+   ```bash
+   git clone https://github.com/Raxephion/FlowGen-webUI.git
+   cd FlowGen-webUI
+   ```
+
+2. **Run the installer script** (Windows):
+   ```bash
+   install.bat
+   ```
+
    This:
-   - Activates the venv
-   - Launches the web UI in your browser
+   - Creates a virtual environment
+   - Installs all dependencies
+   - Preps the app for launch
 
-Done. You’re generating. You're welcome.
+3. **Launch the app**:
+   ```bash
+   launch.bat
+   ```
 
----
-
-## 🧩 About the Model – AuraFlow v0.3
-
-AuraFlow v0.3 is a stylish little diffusion model that:
-- Supports large images (up to 1536x1536)
-- Uses flow-matching to keep things snappy
-- Scores great on GenEval benchmarks
-
-Built by the clever humans at [fal.ai](https://fal.ai/blog/auraflow). Props to `@cloneofsimo`, `@isidentical`, and their crew.
+4. First-time run? Grab a drink — the model (10–15GB) will download via `diffusers`. After that, it's cached.
 
 ---
 
-## 🧯 Troubleshooting
+## 🖼️ Using the App
 
-### CUDA Out of Memory?
-- Lower the resolution.
-- Close apps hogging the GPU (yes, even Chrome).
-- CPU offload helps, but magic it ain't.
+Once launched, open the Gradio URL in your browser (e.g., `http://127.0.0.1:7860`) and:
 
-### First Launch is Slow?
-That’s the model downloading. Give it time. It’s ~10–15GB. Coffee break.
+- Type a prompt
+- Adjust image size, steps, CFG, etc.
+- Click **Generate**
+- Admire or delete your creation
 
-### Python Errors?
-Try running `install.bat` again to reset the venv and dependencies.
+Images will be saved to the `output` folder, in case you accidentally make something good.
 
 ---
 
-## 🔁 Want to Use a Different Model?
+## 🧠 About AuraFlow
+
+Powered by [`fal/AuraFlow-v0.3`](https://huggingface.co/fal/AuraFlow-v0.3), a state-of-the-art, open-source text-to-image model.
+
+> "Fine-tuned on more aesthetic data. Now supports wider aspect ratios. SOTA results on GenEval. Fancy stuff." – *fal.ai*
+
+Huge respect to @cloneofsimo, @isidentical, and the folks behind the scenes.
+
+---
+
+## 🛠 Troubleshooting
+
+- **Out of Memory (OOM)?**
+  - Lower the resolution
+  - Reduce steps
+  - Close Chrome tabs full of cat videos
+
+- **Stuck downloading?**
+  - Check your internet connection. Maybe even say something nice to it.
+
+- **Gradio crashing or tooltip errors?**
+  - You’re probably on an older/newer version. We stripped tooltips for max compatibility.
+
+- **Protobuf errors?**
+  - Make sure you ran `install.bat` in a clean environment. Reinstall dependencies if needed.
+
+---
+
+## 🔄 Switching Models
+
+Want to use a different AuraFlow-based model (e.g. a finetuned fork)?
 
 1. Open `app.py`
-2. Change this line:
-```python
-MODEL_NAME = "fal/AuraFlow-v0.3"
-```
-…to whatever Hugging Face model you want (as long as it's compatible with `diffusers`).
+2. Change the `MODEL_NAME` at the top to your preferred Hugging Face repo
+3. Make sure it's compatible with `AuraFlowPipeline`
 
 ---
 
-## 🙃 Final Words
+## 📎 Disclaimer
 
-AuraFLooow is for creators, tinkerers, and burnt-out ComfyUI users who just want to make some dang art. It's not built for production. It’s not trying to be everything. It’s just meant to work — simply, and well.
-
-Use responsibly. Prompt ethically. And don’t call us if your VRAM explodes.
+- This tool is provided as-is. No warranties, no unicorns.
+- AuraFlow is powerful. Use it ethically and responsibly.
+- Results may vary depending on your prompt, GPU, or cosmic alignment.
 
 ---
 
-Happy prompting! 🎨  
-— *Team Definitely Slept at Some Point*
+Happy generating, and may your VRAM survive the journey.  
+— *The Flowgen-webUI Dev Team (i.e., probably just you)*
