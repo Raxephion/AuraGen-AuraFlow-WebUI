@@ -133,5 +133,13 @@ Want to use a different AuraFlow-based model (e.g. a finetuned fork)?
 
 ---
 
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
+
+It uses the [AuraFlow model](https://huggingface.co/fal/AuraFlow-v0.3), which is licensed under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0). All rights and credit for AuraFlow go to its authors at [fal.ai](https://fal.ai/).
+
+---
+
 Happy generating, and may your VRAM survive the journey.  
 — *The Flowgen-webUI Dev Team (i.e., probably just you)*
