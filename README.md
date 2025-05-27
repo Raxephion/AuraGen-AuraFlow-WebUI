@@ -1,9 +1,9 @@
-# FlowGen-webUI ⚡  
+# CipherCore-AuraFlow-webUI ⚡  
 *A 6GB VRAM-optimized, local AuraFlow Gradio web app with automatic installer — for the rest of us.*
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Welcome to **FlowGen-webUI**, the low-VRAM, no-nonsense interface for generating images with [AuraFlow](https://huggingface.co/fal/AuraFlow-v0.3). It's for people who think *ComfyUI* is great but also mildly terrifying, and who’d rather click buttons than build node graphs in their free time.
+Welcome to **CipherCore-AuraFlow-webUI**, the low-VRAM, no-nonsense interface for generating images with [AuraFlow](https://huggingface.co/fal/AuraFlow-v0.3). It's for people who think *ComfyUI* is great but also mildly terrifying, and who’d rather click buttons than build node graphs in their free time.
 
 This app runs locally, plays nice with ~6GB of VRAM, and doesn’t ask you to sign away your data to the cloud gods. You're welcome.
 
@@ -11,7 +11,7 @@ This app runs locally, plays nice with ~6GB of VRAM, and doesn’t ask you to si
 
 ## 🌀 What Is This?
 
-**Flowgen-webUI** is a lightweight Gradio app for running `fal/AuraFlow-v0.3` locally. It's designed for:
+**CipherCore-AuraFlow-webUI** is a lightweight, highly optimised Gradio app for running `fal/AuraFlow-v0.3` locally. It's designed for:
 
 - **Modest hardware** (think: 6GB VRAM cards that aren't dreaming of becoming A100s).
 - **Non-technical users** (no Python kung-fu or YAML deciphering required).
@@ -35,7 +35,7 @@ This app runs locally, plays nice with ~6GB of VRAM, and doesn’t ask you to si
 
 ### Hardware:
 - **NVIDIA GPU** with **~6GB VRAM** or more recommended.
-  - Will fall back to CPU mode if CUDA is unavailable (but expect glacial speeds).
+  - Will fall back to CPU mode if CUDA is unavailable (but expect glacial speeds). Do not try
   - AMD GPUs are not officially supported (yet), but ROCm support is evolving.
 
 ### Software:
@@ -157,4 +157,4 @@ It uses the [AuraFlow model](https://huggingface.co/fal/AuraFlow-v0.3), which is
 ---
 
 Happy generating, and may your VRAM survive the journey.  
-— *The Flowgen-webUI Dev Team (There is an I in team after all! - Raxephion)*
+— *The CipherCore-AuraFlow-webUI Dev Team (There is an I in team after all! - Raxephion)*
