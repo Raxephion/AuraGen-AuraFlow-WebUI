@@ -18,9 +18,6 @@ MODEL_NAME = "fal/AuraFlow-v0.3" # Official AuraFlow diffusers model
 
 # Determine device and dtype
 if torch.cuda.is_available():
-    # Attempt to use cuda:0 first, then cuda:1, etc.
-    # For a specific device like cuda:1, you can hardcode it.
-    # However, let's try to be more flexible.
     try:
         torch.cuda.set_device(0) # Try primary GPU
         DEVICE = "cuda:0"
@@ -28,7 +25,7 @@ if torch.cuda.is_available():
         print("CUDA device 0 not available or already in use. Trying cuda:1 if available.")
         try:
             torch.cuda.set_device(1)
-            DEVICE = "cuda:1" # As per your original specific request
+            DEVICE = "cuda:1"
         except RuntimeError:
             print("CUDA device 1 not available. Falling back to CPU.")
             DEVICE = "cpu"
@@ -36,11 +33,11 @@ else:
     DEVICE = "cpu"
 
 TORCH_DTYPE = torch.float16 if DEVICE.startswith("cuda") else torch.float32
-VARIANT = "fp16" if DEVICE.startswith("cuda") else None # No fp16 variant for CPU usually
+VARIANT = "fp16" if DEVICE.startswith("cuda") else None
 
 # --- Global Variables ---
 pipeline = None
-last_seed = -1 # Initialize with -1 for random
+last_seed = -1
 
 # --- Model Loading ---
 def load_auraflow_pipeline():
@@ -56,15 +53,15 @@ def load_auraflow_pipeline():
 
             if DEVICE.startswith("cuda"):
                 print("Enabling model CPU offload for lower VRAM usage...")
-                pipeline.enable_model_cpu_offload() # Key for low VRAM
+                pipeline.enable_model_cpu_offload()
             else:
-                pipeline.to(DEVICE) # Move to CPU if not using CUDA offload
+                pipeline.to(DEVICE)
 
             print("AuraFlow model loaded successfully.")
         except Exception as e:
             print(f"Error loading AuraFlow model: {e}")
-            pipeline = None # Ensure pipeline is None if loading failed
-            raise # Re-raise the exception to notify the user via Gradio
+            pipeline = None
+            raise
     return pipeline
 
 # --- Core Generation Logic ---
@@ -72,21 +69,19 @@ def generate_image(prompt: str, width: int, height: int, num_inference_steps: in
     global last_seed, pipeline
 
     if pipeline is None:
-        # This could happen if the initial load failed.
         gr.Error("Model is not loaded. Please check console logs and restart the app.")
-        return None, "Error: Model not loaded.", -1, "Error"
-
+        return None, -1, "Error: Model not loaded. Check logs."
 
     current_seed = int(seed)
     if current_seed == -1:
         current_seed = torch.randint(0, 2**32 - 1, (1,)).item()
-    last_seed = current_seed # Store the actual seed used
+    last_seed = current_seed
 
-    generator = torch.Generator(device="cpu").manual_seed(current_seed) # Generator on CPU for reproducibility
+    generator = torch.Generator(device="cpu").manual_seed(current_seed)
 
     status_message = "Generating..."
     try:
-        print(f"Generating image with seed: {current_seed}")
+        print(f"Generating image with seed: {current_seed}, W: {width}, H: {height}, Steps: {num_inference_steps}, CFG: {guidance_scale}")
         pil_image = pipeline(
             prompt=prompt,
             width=width,
@@ -96,9 +91,8 @@ def generate_image(prompt: str, width: int, height: int, num_inference_steps: in
             guidance_scale=guidance_scale,
         ).images[0]
 
-        # Sanitize prompt for filename (limit length)
         safe_prompt_segment = sanitize_filename(prompt[:50] if prompt else "auraflow_img")
-        if not safe_prompt_segment.strip(): # Handle empty or space-only prompts
+        if not safe_prompt_segment.strip():
             safe_prompt_segment = "auraflow_img"
         
         unique_id = str(uuid.uuid4())[:8]
@@ -109,7 +103,6 @@ def generate_image(prompt: str, width: int, height: int, num_inference_steps: in
         status_message = f"Image saved as: {filepath}"
         print(status_message)
 
-        # Clear VRAM cache if on CUDA
         if DEVICE.startswith("cuda"):
             torch.cuda.empty_cache()
         gc.collect()
@@ -121,7 +114,7 @@ def generate_image(prompt: str, width: int, height: int, num_inference_steps: in
         import traceback
         traceback.print_exc()
         status_message = f"Error: {str(e)}"
-        return None, current_seed, status_message
+        return None, current_seed, f"Error: {str(e)}"
 
 
 # --- UI Helper Functions ---
@@ -133,61 +126,81 @@ def reuse_last_seed_value():
     return last_seed if last_seed is not None else -1
 
 # --- Gradio Interface ---
-# Attempt to load the model at startup
-# This way, any loading errors are caught early, and the first generation isn't slow.
 try:
     load_auraflow_pipeline()
 except Exception as e:
     print(f"Failed to load model on startup: {e}. The app might not function correctly.")
-    # Gradio will still launch, but generation will fail until model is loaded.
 
-# Using a soft theme for a modern look. You can try others like gr.themes.Glass()
-theme = gr.themes.Soft(
-    primary_hue=gr.themes.colors.purple,
-    secondary_hue=gr.themes.colors.orange,
-    neutral_hue=gr.themes.colors.gray,
-    font=[gr.themes.GoogleFont("Inter"), "ui-sans-serif", "system-ui", "sans-serif"],
-).set(
-    # Further fine-tuning of the theme if needed
-    # button_primary_background_fill="*primary_500",
-    # button_primary_background_fill_hover="*primary_400",
+theme = gr.themes.Default().set(
+    body_background_fill="#121212",
+    body_text_color="#e0e0e0",
+    body_text_color_subdued="#b0b0b0",
+    block_background_fill="#1e1e1e",
+    block_border_width="1px",
+    block_border_color="#333333",
+    block_label_background_fill="#2c2c2c",
+    block_label_text_color="#e0e0e0",
+    block_title_text_color="#ffffff",
+    input_background_fill="#2c2c2c",
+    input_border_color="#444444",
+    # input_text_color="#e0e0e0", # MODIFIED: Removed this line
+    button_primary_background_fill="#007bff",
+    button_primary_text_color="#ffffff",
+    button_secondary_background_fill="#3a3a3a",
+    button_secondary_text_color="#e0e0e0",
+    slider_color="#007bff",
+    slider_color_dark="#0056b3",
 )
 
+
 with gr.Blocks(theme=theme, css="""
-    .gradio-container { background-color: #f7f7f7; } /* Light background for the page */
-    .small-button { /* For seed buttons */
-        min-width: 0 !important;
-        width: 3em; /* Slightly wider for better emoji display */
-        height: 3em; /* Match textbox height if possible */
-        padding: 0.25em !important;
-        line-height: 1;
-        font-size: 1.2em; /* Make emoji bigger */
-        align-self: end; /* Align with bottom of textbox */
-        margin-left: 0.5em !important;
+    body { color: #e0e0e0; } 
+    .gradio-container { background-color: #121212; }
+    
+    .small-button { 
+        min-width: 0 !important; width: 3em; height: 3em; 
+        padding: 0.25em !important; line-height: 1; font-size: 1.2em; 
+        align-self: end; margin-left: 0.5em !important;
     }
-    #seed_row .gr-form { /* Target the form containing the number input and buttons */
-        display: flex;
-        align-items: flex-end; /* Align items to the bottom */
-    }
-    #seed_row .gr-number { /* Target number input specifically */
-        flex-grow: 1; /* Allow number input to take available space */
-    }
-    .gr-group { /* Style for groups/cards if used */
-        border-radius: 12px !important;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05) !important;
-        background-color: white !important; /* Card background */
+    #seed_row .gr-form { display: flex; align-items: flex-end; }
+    #seed_row .gr-number { flex-grow: 1; }
+    
+    .gr-group { 
+        border-radius: 12px !important; 
+        box-shadow: 0 4px 8px rgba(0,0,0,0.25) !important; 
+        background-color: #1e1e1e !important;
         padding: 20px !important;
+        border: 1px solid #333333;
     }
-    /* Ensure markdown headers are styled nicely by the theme or add custom styles */
-    h1 { font-size: 2.5em !important; color: *primary_600 !important; text-align: center; margin-bottom: 0.5em !important; }
-    .gr-markdown p { font-size: 1.1em; color: *neutral_600; text-align: center; margin-bottom: 1.5em; }
+    
+    h1 { 
+        font-size: 2.5em !important; 
+        color: #00aeff !important; 
+        text-align: center; margin-bottom: 0.5em !important; 
+    }
+    h3 { color: #c0c0c0 !important; }
+    .gr-markdown p { 
+        font-size: 1.1em; color: #b0b0b0;
+        text-align: center; margin-bottom: 1.5em; 
+    }
+    
+    .gr-block-label { color: #e0e0e0 !important; }
+    /* Explicitly styling input text color via CSS as a fallback */
+    input[type='text'], input[type='number'], textarea { color: #e0e0e0 !important; }
+    .gr-input { color: #e0e0e0 !important; background-color: #2c2c2c !important; border-color: #444444 !important; }
+    .gr-slider label span { color: #e0e0e0 !important; }
+    .gr-checkbox-label span { color: #e0e0e0 !important; }
+    .gr-radio label span { color: #e0e0e0 !important; }
+    .gr-dropdown label span { color: #e0e0e0 !important; }
+
+    .gr-accordion summary { color: #c0c0c0 !important; }
 """) as demo:
 
     gr.Markdown("# AuraFlow ✨ Image Generation")
-    gr.Markdown("Experience the power of AuraFlow, the largest Apache-licensed open-source image generation model. This UI is designed to be sleek and VRAM-friendly.")
+    gr.Markdown("Experience the power of AuraFlow. This UI is designed to be sleek, VRAM-friendly, and now in glorious dark mode.")
 
     with gr.Row():
-        with gr.Column(scale=2, min_width=400): # Control Panel
+        with gr.Column(scale=2, min_width=400):
             with gr.Group():
                 gr.Markdown("### 🎨 Generation Settings")
                 prompt_input = gr.Textbox(
@@ -197,22 +210,20 @@ with gr.Blocks(theme=theme, css="""
                 )
                 
                 with gr.Row():
-                    width_slider = gr.Slider(label="Width", minimum=256, maximum=2048, value=1024, step=64) # Default to common sizes
+                    width_slider = gr.Slider(label="Width", minimum=256, maximum=2048, value=1024, step=64)
                     height_slider = gr.Slider(label="Height", minimum=256, maximum=2048, value=1024, step=64)
 
-                steps_slider = gr.Slider(label="Inference Steps", minimum=4, maximum=100, value=28, step=1) # AuraFlow can work with fewer steps
-                guidance_slider = gr.Slider(label="Guidance Scale (CFG)", minimum=0.0, maximum=20.0, value=3.0, step=0.1) # Typical CFG for AuraFlow
+                steps_slider = gr.Slider(label="Inference Steps", minimum=4, maximum=100, value=28, step=1)
+                guidance_slider = gr.Slider(label="Guidance Scale (CFG)", minimum=0.0, maximum=20.0, value=3.0, step=0.1)
 
-                with gr.Row(elem_id="seed_row"): # For CSS targeting
+                with gr.Row(elem_id="seed_row"):
                     seed_input = gr.Number(label="Seed (-1 for random)", value=-1, precision=0, interactive=True)
-                    # MODIFIED: Removed tooltip argument
                     random_seed_button = gr.Button("🎲", elem_classes="small-button")
-                    # MODIFIED: Removed tooltip argument
                     reuse_seed_button = gr.Button("♻️", elem_classes="small-button")
 
                 generate_button = gr.Button("Generate Image", variant="primary", scale=2)
 
-        with gr.Column(scale=3, min_width=500): # Output Panel
+        with gr.Column(scale=3, min_width=500):
             with gr.Group():
                 gr.Markdown("### 🖼️ Generated Image")
                 output_image = gr.Image(label="Output", type="pil", interactive=False, show_download_button=True, show_share_button=True)
@@ -220,26 +231,17 @@ with gr.Blocks(theme=theme, css="""
                     generated_seed_output = gr.Textbox(label="Used Seed", interactive=False)
                     status_output = gr.Textbox(label="Status / Filename", interactive=False, lines=2)
 
-    # --- Event Handling ---
     generate_button.click(
         fn=generate_image,
         inputs=[prompt_input, width_slider, height_slider, steps_slider, seed_input, guidance_slider],
         outputs=[output_image, generated_seed_output, status_output],
-        api_name="generate_image" # For API access if needed
+        api_name="generate_image"
     )
 
     random_seed_button.click(fn=reset_seed_value, inputs=[], outputs=seed_input)
     reuse_seed_button.click(fn=reuse_last_seed_value, inputs=[], outputs=seed_input)
 
-    # Example of how to set default values from sliders to prompt (if desired)
-    # def update_prompt_with_size(width, height):
-    #     return f"A photo of X, {width}x{height}" # Example
-    # width_slider.release(update_prompt_with_size, [width_slider, height_slider], prompt_input)
-    # height_slider.release(update_prompt_with_size, [width_slider, height_slider], prompt_input)
-
 # --- Launch ---
 if __name__ == "__main__":
-    # The queue helps manage multiple requests if the app is busy
-    # max_size=1 might be better for low VRAM to avoid OOM if multiple heavy jobs queue up
     demo.queue(max_size=1, default_concurrency_limit=1) 
-    demo.launch(debug=True, share=False) # Set share=True to get a public link (careful with resources)
+    demo.launch(debug=True, share=False)
