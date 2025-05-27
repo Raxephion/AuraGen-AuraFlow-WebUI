@@ -1,7 +1,14 @@
+# PyTorch, torchvision, and torchaudio are installed via install.bat
+# to attempt a CUDA-enabled version by default.
+# If you need a different PyTorch version (e.g., for older CUDA, AMD, or CPU),
+# please install it manually in your virtual environment BEFORE running install.bat,
+# or modify install.bat.
+# See: https://pytorch.org/get-started/locally/
+
+# --------------------------------------------------------------------------------
+# Application Dependencies (excluding PyTorch):
+# --------------------------------------------------------------------------------
 diffusers
-torch
-torchvision
-torchaudio
 transformers
 accelerate
 gradio
