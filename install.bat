@@ -1,5 +1,5 @@
 @echo off
-title AuraFlow App Installer
+title CipherCore AuraFlow webUI App Installer
 
 echo Checking for existing virtual environment (venv)...
 IF NOT EXIST venv (
