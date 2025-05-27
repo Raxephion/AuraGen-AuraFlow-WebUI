@@ -1,3 +1,6 @@
+# APP STATUS: RUNS, BUT INCREDIBLY SLOW - BUSY FIXING
+
+
 # AuraGen-AuraFlow-WebUI ⚡  
 *A 6GB VRAM-optimized, local AuraFlow Gradio web app with automatic installer — for the rest of us.*
 
