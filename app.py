@@ -1,3 +1,12 @@
+# app.py
+# -*- coding: utf-8 -*-
+"""
+AuraGen-AuraFlow-WebUI
+
+Author: raxephion
+Date: May 25, 2025
+"""
+
 import os
 import uuid
 import gradio as gr
