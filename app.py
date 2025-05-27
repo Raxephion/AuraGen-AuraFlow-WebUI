@@ -1,12 +1,3 @@
-# app.py
-# -*- coding: utf-8 -*-
-"""
-AuraGen-AuraFlow-WebUI
-
-Author: raxephion
-Date: May 25, 2025
-"""
-
 import os
 import uuid
 import gradio as gr
@@ -42,7 +33,7 @@ else:
     DEVICE = "cpu"
 
 TORCH_DTYPE = torch.float16 if DEVICE.startswith("cuda") else torch.float32
-VARIANT = "fp16" if DEVICE.startswith("cuda") else None
+# VARIANT = "fp16" if DEVICE.startswith("cuda") else None # MODIFIED: This line is removed/commented
 
 # --- Global Variables ---
 pipeline = None
@@ -54,9 +45,8 @@ def load_auraflow_pipeline():
     if pipeline is None:
         print(f"Loading AuraFlow model: {MODEL_NAME} to {DEVICE} with {TORCH_DTYPE}...")
         try:
+            # MODIFIED: 'variant' is no longer explicitly added to pipeline_args
             pipeline_args = {"cache_dir": MODEL_FOLDER, "torch_dtype": TORCH_DTYPE}
-            if VARIANT:
-                pipeline_args["variant"] = VARIANT
 
             pipeline = AuraFlowPipeline.from_pretrained(MODEL_NAME, **pipeline_args)
 
@@ -79,6 +69,7 @@ def generate_image(prompt: str, width: int, height: int, num_inference_steps: in
 
     if pipeline is None:
         gr.Error("Model is not loaded. Please check console logs and restart the app.")
+        # MODIFIED: Ensured all return paths from this condition match the expected number of outputs
         return None, -1, "Error: Model not loaded. Check logs."
 
     current_seed = int(seed)
@@ -122,8 +113,9 @@ def generate_image(prompt: str, width: int, height: int, num_inference_steps: in
         print(f"Error during image generation: {e}")
         import traceback
         traceback.print_exc()
+        # MODIFIED: Ensured error return path matches expected number of outputs
         status_message = f"Error: {str(e)}"
-        return None, current_seed, f"Error: {str(e)}"
+        return None, current_seed, status_message
 
 
 # --- UI Helper Functions ---
@@ -152,7 +144,6 @@ theme = gr.themes.Default().set(
     block_title_text_color="#ffffff",
     input_background_fill="#2c2c2c",
     input_border_color="#444444",
-    # input_text_color="#e0e0e0", # MODIFIED: Removed this line
     button_primary_background_fill="#007bff",
     button_primary_text_color="#ffffff",
     button_secondary_background_fill="#3a3a3a",
@@ -194,9 +185,9 @@ with gr.Blocks(theme=theme, css="""
     }
     
     .gr-block-label { color: #e0e0e0 !important; }
-    /* Explicitly styling input text color via CSS as a fallback */
     input[type='text'], input[type='number'], textarea { color: #e0e0e0 !important; }
-    .gr-input { color: #e0e0e0 !important; background-color: #2c2c2c !important; border-color: #444444 !important; }
+    /* .gr-input might be too broad, if issues arise, target more specific input classes */
+    .gr-input { color: #e0e0e0 !important; background-color: #2c2c2c !important; border-color: #444444 !important; } 
     .gr-slider label span { color: #e0e0e0 !important; }
     .gr-checkbox-label span { color: #e0e0e0 !important; }
     .gr-radio label span { color: #e0e0e0 !important; }
@@ -206,7 +197,7 @@ with gr.Blocks(theme=theme, css="""
 """) as demo:
 
     gr.Markdown("# AuraFlow ✨ Image Generation")
-    gr.Markdown("Experience the power of AuraFlow. This UI is designed to be sleek, VRAM-friendly, and now in glorious dark mode.")
+    gr.Markdown("Experience the power of AuraFlow. This UI is designed to be sleek, VRAM-friendly, and now in glorious dark mode. And incredibly slow - busy fixing")
 
     with gr.Row():
         with gr.Column(scale=2, min_width=400):
@@ -226,6 +217,7 @@ with gr.Blocks(theme=theme, css="""
                 guidance_slider = gr.Slider(label="Guidance Scale (CFG)", minimum=0.0, maximum=20.0, value=3.0, step=0.1)
 
                 with gr.Row(elem_id="seed_row"):
+                    # CORRECTED TYPO HERE:
                     seed_input = gr.Number(label="Seed (-1 for random)", value=-1, precision=0, interactive=True)
                     random_seed_button = gr.Button("🎲", elem_classes="small-button")
                     reuse_seed_button = gr.Button("♻️", elem_classes="small-button")
