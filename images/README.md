@@ -1,1 +1,1 @@
-.
+Inference image samples
