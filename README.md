@@ -4,6 +4,10 @@
 # AuraGen-AuraFlow-WebUI ⚡  
 *A 6GB VRAM-optimized, local AuraFlow Gradio web app with automatic installer — for the rest of us.*
 
+![App Screenshot 1](https://raw.githubusercontent.com/Raxephion/AuraGen-AuraFlow-WebUI/main/app_images/Untitled.png)
+![App Screenshot 2](https://raw.githubusercontent.com/Raxephion/AuraGen-AuraFlow-WebUI/main/app_images/Untitled2.png)
+
+
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Welcome to **AuraGen-AuraFlow-WebUI**, the low-VRAM, no-nonsense interface for generating images with [AuraFlow](https://huggingface.co/fal/AuraFlow-v0.3). It's for people who think *ComfyUI* is great but also mildly terrifying, and who’d rather click buttons than build node graphs in their free time.
