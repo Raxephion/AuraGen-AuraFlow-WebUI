@@ -196,7 +196,7 @@ with gr.Blocks(theme=theme, css="""
     .gr-accordion summary { color: #c0c0c0 !important; }
 """) as demo:
 
-    gr.Markdown("# AuraFlow ✨ Image Generation")
+    gr.Markdown("# AuraGen AuraFlow ✨ Image Generation")
     gr.Markdown("Experience the power of AuraFlow. This UI is designed to be sleek, VRAM-friendly, and now in glorious dark mode. And incredibly slow - busy fixing")
 
     with gr.Row():
